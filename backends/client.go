@@ -36,8 +36,6 @@ func New(config Config) (StoreClient, error) {
 
 	if config.Backend == "file" {
 		log.Info("Backend source(s) set to " + strings.Join(config.YAMLFile, ", "))
-	} else if config.Backend == "nacos" && len(config.Endpoint) > 0 {
-		log.Info("Backend source(s) set to " + config.Endpoint)
 	} else {
 		log.Info("Backend source(s) set to " + strings.Join(backendNodes, ", "))
 	}
@@ -90,9 +88,8 @@ func New(config Config) (StoreClient, error) {
 	case "nacos":
 		return nacos.NewNacosClient(backendNodes, config.Group, constant.ClientConfig{
 					NamespaceId: 	config.Namespace,
-					AccessKey: 		config.AccessKey,
-					SecretKey: 		config.SecretKey,
-					Endpoint:  		config.Endpoint,
+					Username: 		config.Username,
+					Password: 		config.Password,
 				})
 	}
 	return nil, errors.New("Invalid backend")

@@ -27,9 +27,6 @@ type Config struct {
 	Filter       string     `toml:"filter"`
 	Path         string     `toml:"path"`
 	Group		 string 	`toml:"group"`
-	Endpoint	 string 	`toml:"endpoint"`
 	Namespace    string 	`toml:"namespace"`
-	AccessKey    string 	`toml:"accessKey"`
-	SecretKey    string 	`toml:"secretKey"`
 	Role         string
 }

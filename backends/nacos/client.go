@@ -18,8 +18,6 @@ type Client struct {
 	client config_client.IConfigClient
 	group string
 	namespace string
-	accessKey string
-	secretKey string
 	channel chan int
 }
 
@@ -41,8 +39,7 @@ func NewNacosClient(nodes []string, group string, config constant.ClientConfig) 
 		group = "DEFAULT_GROUP"
 	}
 
-	log.Info(fmt.Sprintf("endpoint=%s, namespace=%s, group=%s, accessKey=%s, secretKey=%s", 
-		config.Endpoint, config.NamespaceId, group, config.AccessKey, config.SecretKey))
+	log.Info(fmt.Sprintf("namespace=%s, group=%s", config.NamespaceId, group))
 
 	configClient, err = clients.CreateConfigClient(map[string]interface{}{
 		"serverConfigs": servers,
@@ -51,20 +48,18 @@ func NewNacosClient(nodes []string, group string, config constant.ClientConfig) 
 			ListenInterval:      20000,
 			NotLoadCacheAtStart: true,
 			NamespaceId:	     config.NamespaceId,
-			AccessKey: 			 config.AccessKey,
-			SecretKey: 			 config.SecretKey,
-			Endpoint:   		 config.Endpoint,
+			Username: 			 config.Username,
+			Password: 			 config.Password,
 		},
 	})
 
-	client = &Client{configClient, group, config.NamespaceId, config.AccessKey, config.SecretKey, make(chan int)}
+	client = &Client{configClient, group, config.NamespaceId, make(chan int)}
 
 	return
 }
 
 func (client *Client) GetValues(keys []string) (map[string]string, error) {
 	vars := make(map[string]string)
-	fmt.Println(keys)
 	for _, key := range keys {
 		k := strings.TrimPrefix(key, "/")
 		k = replacer.Replace(k)
